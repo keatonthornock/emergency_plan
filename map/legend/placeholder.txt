@@ -1,0 +1,1 @@
+Placeholder: Replace this folder with files from your qgis2web export.

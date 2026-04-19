@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Template landing page for a GitHub Pages-hosted qgis2web map.">
+  <title>Community Map Viewer Template</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --text: #1f2a37;
+      --muted: #5f728c;
+      --primary: #1e5bb8;
+      --primary-hover: #194d9b;
+      --border: #d9e2ef;
+      --shadow: 0 10px 30px rgba(22, 34, 58, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #eef3fa 0%, #f9fbfe 100%);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      width: min(760px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 2rem 1.25rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      line-height: 1.2;
+      color: #14325c;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.85rem 1.3rem;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      border: 1px solid transparent;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .meta {
+      border-top: 1px solid var(--border);
+      background: #f8fbff;
+      padding: 1.1rem 1.25rem 1.4rem;
+    }
+
+    .meta h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      color: #20426f;
+    }
+
+    .meta p {
+      margin: 0;
+      font-size: 0.96rem;
+    }
+
+    code {
+      background: #edf3fb;
+      border: 1px solid #d6e2f2;
+      border-radius: 6px;
+      padding: 0.1rem 0.35rem;
+      color: #234f88;
+      font-size: 0.92em;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-labelledby="page-title">
+      <div class="hero">
+        <!-- Main landing content for template users -->
+        <h1 id="page-title">Community Map Viewer Template</h1>
+        <p>This repository hosts a mobile-friendly map site.</p>
+        <p>Your interactive map lives in <code>/map/</code>.</p>
+
+        <div class="actions">
+          <!-- Keep this link relative so it works on GitHub Pages project URLs -->
+          <a class="btn" href="./map/">Open Map</a>
+        </div>
+      </div>
+
+      <div class="meta">
+        <!-- Secondary explanation for future maintainers and template users -->
+        <h2>About this template</h2>
+        <p>
+          This is a starter template for publishing QGIS maps exported with qgis2web on GitHub Pages.
+          Replace only the contents of <code>/map</code> with your own qgis2web export, then enable Pages.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
