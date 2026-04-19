@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Placeholder map page for qgis2web replacement.">
+  <title>Map Placeholder</title>
+  <style>
+    :root {
+      --bg: #f4f7fc;
+      --card: #ffffff;
+      --text: #1f2a37;
+      --muted: #5f728c;
+      --accent: #1e5bb8;
+      --border: #d8e3f2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
+    .panel {
+      width: min(680px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.1rem;
+      box-shadow: 0 8px 24px rgba(26, 44, 77, 0.08);
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: #153a67;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+    }
+    p { margin: 0.4rem 0; color: var(--muted); }
+    .highlight {
+      display: inline-block;
+      background: #ebf2fc;
+      border: 1px solid #d2e0f5;
+      color: #1f4f89;
+      border-radius: 8px;
+      padding: 0.2rem 0.5rem;
+      font-weight: 600;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <!-- Replace this entire /map folder with your qgis2web export -->
+    <h1>Replace this folder with your qgis2web export.</h1>
+    <p>
+      This is a placeholder page so the template works before your real map is added.
+    </p>
+    <p>
+      Keep your exported map entry file at: <span class="highlight">/map/index.html</span>
+    </p>
+    <p>
+      Need help? Read <a href="../MAP-REPLACEMENT-INSTRUCTIONS.md">MAP-REPLACEMENT-INSTRUCTIONS.md</a>.
+    </p>
+  </main>
+</body>
+</html>
