@@ -334,7 +334,9 @@ async function fetchWardPlanHTML(planConfig) {
   if (!planConfig?.url) throw new Error('Ward plan URL is missing in config.json');
 
   if (planConfig.source_type === 'google_doc_html' || planConfig.source_type === 'local_html') {
-    const response = await fetch(planConfig.url, { cache: 'no-store' });
+    const separator = planConfig.url.includes('?') ? '&' : '?';
+    const freshURL = `${planConfig.url}${separator}_=${Date.now()}`;
+    const response = await fetch(freshURL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Failed to fetch ward plan (${response.status})`);
     return response.text();
   }
@@ -343,8 +345,6 @@ async function fetchWardPlanHTML(planConfig) {
 }
 
 async function loadWardPlan() {
-  if (state.wardPlanLoaded) return;
-
   refs.wardPlanContent.innerHTML = '<p class="loading">Loading ward plan…</p>';
 
   try {
@@ -352,7 +352,6 @@ async function loadWardPlan() {
     const clean = sanitizeHTML(html);
     refs.wardPlanContent.innerHTML = '';
     refs.wardPlanContent.appendChild(clean);
-    state.wardPlanLoaded = true;
   } catch (error) {
     refs.wardPlanContent.innerHTML = `
       <p>We could not load the ward emergency response plan right now.</p>
