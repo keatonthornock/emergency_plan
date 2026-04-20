@@ -16,16 +16,20 @@
     </div>
   </main>
 
-  <button class="fab fab-signup" id="openSignup" type="button" aria-label="Open sign-up form">
+  <div class="title-bubble" aria-hidden="true">Emergency Response Map</div>
+
+  <button class="fab fab-signup fab-pill" id="openSignup" type="button" aria-label="Open sign-up form">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M4 4.75A2.75 2.75 0 0 1 6.75 2h6.54a2.75 2.75 0 0 1 1.95.81l2.95 2.95a2.75 2.75 0 0 1 .81 1.94v11.55A2.75 2.75 0 0 1 17.25 22H6.75A2.75 2.75 0 0 1 4 19.25V4.75Zm3.5 3.5a.75.75 0 0 0 0 1.5h9a.75.75 0 0 0 0-1.5h-9Zm0 4a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5h-6Zm0 4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5h-4Z" fill="currentColor"/>
     </svg>
+    <span class="fab__label">Register</span>
   </button>
 
-  <button class="fab fab-info" id="openInfo" type="button" aria-label="Open ward emergency response plan">
+  <button class="fab fab-info fab-pill" id="openInfo" type="button" aria-label="Open ward emergency response plan">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2.7a9.3 9.3 0 1 0 0 18.6 9.3 9.3 0 0 0 0-18.6Zm0 4.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm1.3 10.4h-2.6v-1.3h.6v-4h-.6v-1.3h2v5.3h.6v1.3Z" fill="currentColor"/>
     </svg>
+    <span class="fab__label">Plan</span>
   </button>
 
   <button class="fab fab-share" id="openShare" type="button" aria-label="Open share options">
@@ -68,7 +72,7 @@
       </div>
 
       <div class="share-actions" aria-label="Share options">
-        <button id="shareNative" type="button" class="share-option share-option--native is-hidden" aria-label="Share with installed apps">
+        <button id="shareNative" type="button" class="share-option share-option--native share-option--disabled is-hidden" aria-label="Share with installed apps">
           <span class="share-option__icon" aria-hidden="true">📱</span>
           <span class="share-option__text">
             <strong>Share…</strong>
@@ -77,7 +81,11 @@
         </button>
 
         <a id="shareEmail" class="share-option" href="#" aria-label="Share via email">
-          <span class="share-option__icon" aria-hidden="true">✉️</span>
+          <span class="share-option__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25V6.75Zm2.2.3 6.34 4.48a.8.8 0 0 0 .92 0l6.34-4.48a1.25 1.25 0 0 0-.55-.05H5.75c-.2 0-.39.02-.55.05Z" fill="currentColor"/>
+            </svg>
+          </span>
           <span class="share-option__text">
             <strong>Email</strong>
             <small>Open your email app</small>
@@ -85,7 +93,11 @@
         </a>
 
         <button id="copyLink" type="button" class="share-option" aria-label="Copy page link">
-          <span class="share-option__icon" aria-hidden="true">🔗</span>
+          <span class="share-option__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9.6 14.4a.9.9 0 0 1 1.27 0 2.8 2.8 0 0 0 3.96 0l2.55-2.55a2.8 2.8 0 1 0-3.96-3.96l-1.28 1.28a.9.9 0 1 1-1.27-1.27l1.28-1.28a4.6 4.6 0 1 1 6.5 6.5l-2.55 2.55a4.6 4.6 0 0 1-6.5 0 .9.9 0 0 1 0-1.27Zm4.8-4.8a.9.9 0 0 1 0 1.27l-4.54 4.53a4.6 4.6 0 0 1-6.5-6.5L5.9 6.35a4.6 4.6 0 0 1 6.5 0 .9.9 0 0 1-1.27 1.27 2.8 2.8 0 0 0-3.96 0L4.62 10.2a2.8 2.8 0 0 0 3.96 3.96l4.53-4.54a.9.9 0 0 1 1.27 0Z" fill="currentColor"/>
+            </svg>
+          </span>
           <span class="share-option__text">
             <strong>Copy Link</strong>
             <small>Copy this page URL</small>
