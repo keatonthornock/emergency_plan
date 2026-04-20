@@ -185,15 +185,11 @@ function clearSignupStatus() {
 function getSignupPayload(formEl) {
   const formData = new FormData(formEl);
   const streetAddress = normalizeWhitespace(formData.get('street_address'));
-  const city = normalizeWhitespace(formData.get('city'));
-  const stateValue = normalizeWhitespace(formData.get('state'));
-  const address = normalizeWhitespace([streetAddress, city, stateValue].join(', '));
+  const address = streetAddress;
 
   return {
     full_name: normalizeWhitespace(formData.get('full_name')),
     street_address: streetAddress,
-    city,
-    state: stateValue,
     address,
     phone: normalizeWhitespace(formData.get('phone'))
   };
@@ -203,8 +199,6 @@ function validateSignupPayload(payload) {
   const missingFields = [];
   if (!payload.full_name) missingFields.push('Full name');
   if (!payload.street_address) missingFields.push('Street address');
-  if (!payload.city) missingFields.push('City');
-  if (!payload.state) missingFields.push('State');
   if (!payload.phone) missingFields.push('Phone');
 
   if (missingFields.length > 0) {
@@ -289,16 +283,6 @@ function renderSignupForm(signupForm) {
       </label>
 
       <label class="form-field">
-        <span>City *</span>
-        <input type="text" name="city" autocomplete="address-level2" value="Harrisville" required>
-      </label>
-
-      <label class="form-field">
-        <span>State *</span>
-        <input type="text" name="state" autocomplete="address-level1" value="UT" required>
-      </label>
-
-      <label class="form-field">
         <span>Phone *</span>
         <input type="tel" name="phone" autocomplete="tel" required>
       </label>
@@ -320,8 +304,6 @@ function renderSignupForm(signupForm) {
     const payload = getSignupPayload(formEl);
     formEl.full_name.value = payload.full_name;
     formEl.street_address.value = payload.street_address;
-    formEl.city.value = payload.city;
-    formEl.state.value = payload.state;
     formEl.phone.value = payload.phone;
 
     const validationMessage = validateSignupPayload(payload);
