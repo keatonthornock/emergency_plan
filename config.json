@@ -7,7 +7,7 @@
   },
   "signup_form": {
     "source_type": "apps_script_endpoint",
-    "endpoint_url": "",
+    "endpoint_url": "https://script.google.com/macros/s/AKfycbzTbaZS-bu7qzOzziBZheBdigO7scQhdpYW-URe6dR1SMg0wiOQg7GNHPvqjzdqw-nV/exec",
     "sheet_tab_name": "House List"
   },
   "contacts": {
