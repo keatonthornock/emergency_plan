@@ -39,6 +39,40 @@ function sanitizeHTML(rawHTML) {
 
   parsed.querySelectorAll('script, style, link, meta, iframe, object, embed, form, button, input, textarea, select').forEach((node) => node.remove());
 
+  // Remove common Google Docs published-page chrome
+  parsed.querySelectorAll([
+    '#header',
+    '#footer',
+    '.docs-titlebar',
+    '.docs-texteventtarget-iframe',
+    '.ndfHFb-c4YZDc-Wrql6b',
+    '.doc-content + div',
+    '[aria-label="Google Docs"]'
+  ].join(',')).forEach((node) => node.remove());
+
+  // Remove obvious text-only junk blocks Google adds
+  const junkPhrases = [
+    'Published using Google Docs',
+    'Report abuse',
+    'Learn more',
+    'Updated automatically every 5 minutes'
+  ];
+
+  Array.from(parsed.body.querySelectorAll('*')).forEach((node) => {
+    const text = (node.textContent || '').trim();
+    if (junkPhrases.includes(text)) {
+      node.remove();
+    }
+  });
+
+  // If Google Docs wrapper exists, prefer the actual document content
+  const docContent =
+    parsed.querySelector('.doc-content') ||
+    parsed.querySelector('#contents') ||
+    parsed.body;
+
+  const workingRoot = docContent.cloneNode(true);
+
   const allowedTags = new Set([
     'div', 'section', 'article', 'header', 'main', 'footer',
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -50,9 +84,10 @@ function sanitizeHTML(rawHTML) {
 
   const allowedAttrs = new Set(['href', 'title', 'target', 'rel', 'colspan', 'rowspan']);
 
-  const allNodes = Array.from(parsed.body.querySelectorAll('*'));
+  const allNodes = Array.from(workingRoot.querySelectorAll('*'));
   for (const node of allNodes) {
     const tag = node.tagName.toLowerCase();
+
     if (!allowedTags.has(tag)) {
       node.replaceWith(...node.childNodes);
       continue;
@@ -62,6 +97,7 @@ function sanitizeHTML(rawHTML) {
       const key = attr.name.toLowerCase();
       const value = attr.value || '';
       const isUnsafeLink = key === 'href' && /^\s*javascript:/i.test(value);
+
       if (key.startsWith('on') || !allowedAttrs.has(key) || isUnsafeLink) {
         node.removeAttribute(attr.name);
       }
@@ -74,7 +110,10 @@ function sanitizeHTML(rawHTML) {
   }
 
   const fragment = document.createDocumentFragment();
-  Array.from(parsed.body.childNodes).forEach((node) => fragment.appendChild(node.cloneNode(true)));
+  Array.from(workingRoot.childNodes).forEach((node) => {
+    fragment.appendChild(node.cloneNode(true));
+  });
+
   return fragment;
 }
 
