@@ -3,211 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Ward emergency response plan map and signup.">
-  <title>Ward Emergency Plan</title>
-  <style>
-    :root {
-      --shadow: 0 6px 20px rgba(20, 31, 50, 0.18);
-      --btn-size: 56px;
-      --radius: 14px;
-      --focus: #1a73e8;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #f4f6f9;
-    }
-
-    .app-shell {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: #e9edf3;
-    }
-
-    .map-frame {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #e9edf3;
-    }
-
-    .fab {
-      position: fixed;
-      z-index: 20;
-      width: var(--btn-size);
-      height: var(--btn-size);
-      border: none;
-      border-radius: 50%;
-      background: #fff;
-      color: #1e2a3a;
-      box-shadow: var(--shadow);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: transform 120ms ease, box-shadow 120ms ease;
-      touch-action: manipulation;
-    }
-
-    .fab:hover { transform: translateY(-1px); }
-    .fab:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
-    }
-
-    .fab-signup {
-      left: 16px;
-      bottom: calc(16px + env(safe-area-inset-bottom));
-    }
-
-    .fab-info {
-      right: 16px;
-      top: calc(16px + env(safe-area-inset-top));
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 40;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-    }
-
-    .modal.is-open { display: flex; }
-
-    .modal__backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(10, 18, 30, 0.52);
-    }
-
-    .modal__panel {
-      position: relative;
-      z-index: 1;
-      width: min(560px, 100%);
-      max-height: min(90vh, 720px);
-      overflow: auto;
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 20px 50px rgba(15, 28, 48, 0.28);
-      padding: 1rem 1rem 1.25rem;
-    }
-
-    .modal__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .modal__title {
-      margin: 0;
-      font-size: 1.2rem;
-      color: #17263a;
-    }
-
-    .close-btn {
-      border: none;
-      background: transparent;
-      font-size: 1.55rem;
-      line-height: 1;
-      cursor: pointer;
-      color: #4a5a72;
-      padding: 0.2rem 0.4rem;
-      border-radius: 8px;
-    }
-
-    .close-btn:focus-visible {
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
-    }
-
-    .help-text {
-      margin: 0.45rem 0 1rem;
-      color: #4d607a;
-      font-size: 0.95rem;
-    }
-
-    .field {
-      margin-bottom: 0.8rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.35rem;
-      font-weight: 600;
-      color: #1f3046;
-      font-size: 0.96rem;
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid #c9d4e3;
-      border-radius: 10px;
-      padding: 0.72rem 0.75rem;
-      font-size: 1rem;
-    }
-
-    input:focus-visible {
-      outline: 2px solid var(--focus);
-      border-color: var(--focus);
-    }
-
-    .submit-btn {
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      background: #1e5bb8;
-      color: #fff;
-      padding: 0.8rem 0.95rem;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 0.3rem;
-    }
-
-    .submit-btn[disabled] {
-      opacity: 0.65;
-      cursor: wait;
-    }
-
-    .form-message {
-      margin-top: 0.75rem;
-      min-height: 1.35rem;
-      font-size: 0.95rem;
-    }
-
-    .form-message[data-state="success"] { color: #176a3f; }
-    .form-message[data-state="error"] { color: #9b1c1c; }
-
-    .info-copy {
-      color: #2e425d;
-      font-size: 0.98rem;
-      line-height: 1.5;
-      margin: 0.6rem 0 0;
-    }
-  </style>
+  <meta name="description" content="Ward emergency response map and planning site.">
+  <title>Ward Emergency Response Map</title>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <main class="app-shell" aria-label="Ward emergency map">
-    <iframe class="map-frame" src="./map/" title="Ward emergency map"></iframe>
+  <header id="configError" class="config-error" role="alert" hidden></header>
+
+  <main class="app-shell" aria-label="Ward emergency response map">
+    <div id="mapContainer" class="map-container" aria-live="polite">
+      <p class="loading">Loading map…</p>
+    </div>
   </main>
 
-  <button class="fab fab-signup" id="openSignup" type="button" aria-label="Open signup form">
+  <button class="fab fab-signup" id="openSignup" type="button" aria-label="Open sign-up form">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 12c2.5 0 4.3-1.9 4.3-4.3S14.5 3.4 12 3.4s-4.3 1.9-4.3 4.3S9.5 12 12 12Zm0 2.2c-3.6 0-6.6 2.1-7.4 5.1-.1.5.3 1 .8 1h13.1c.5 0 .9-.5.8-1-.8-3-3.8-5.1-7.3-5.1Z" fill="currentColor"/>
+      <path d="M4 4.75A2.75 2.75 0 0 1 6.75 2h6.54a2.75 2.75 0 0 1 1.95.81l2.95 2.95a2.75 2.75 0 0 1 .81 1.94v11.55A2.75 2.75 0 0 1 17.25 22H6.75A2.75 2.75 0 0 1 4 19.25V4.75Zm3.5 3.5a.75.75 0 0 0 0 1.5h9a.75.75 0 0 0 0-1.5h-9Zm0 4a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5h-6Zm0 4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5h-4Z" fill="currentColor"/>
     </svg>
   </button>
 
-  <button class="fab fab-info" id="openInfo" type="button" aria-label="Open site information">
+  <button class="fab fab-info" id="openInfo" type="button" aria-label="Open ward emergency response plan">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2.7a9.3 9.3 0 1 0 0 18.6 9.3 9.3 0 0 0 0-18.6Zm0 4.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm1.3 10.4h-2.6v-1.3h.6v-4h-.6v-1.3h2v5.3h.6v1.3Z" fill="currentColor"/>
     </svg>
@@ -217,28 +32,17 @@
     <div class="modal__backdrop" data-close-modal="signupModal"></div>
     <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
       <div class="modal__header">
-        <h2 class="modal__title" id="signupTitle">Ward Emergency Response Signup</h2>
-        <button class="close-btn" type="button" data-close-modal="signupModal" aria-label="Close signup">×</button>
+        <h2 class="modal__title" id="signupTitle">Ward Emergency Contact Sign-up</h2>
+        <button class="close-btn" type="button" data-close-modal="signupModal" aria-label="Close sign-up modal">×</button>
       </div>
-      <p class="help-text">Opt in to the ward emergency response communication and contact list.</p>
+      <p class="help-text">Use the form below to join the ward emergency contact list.</p>
 
-      <form id="signupForm" novalidate>
-        <div class="field">
-          <label for="fullName">Full name</label>
-          <input id="fullName" name="fullName" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="phone">Phone number</label>
-          <input id="phone" name="phone" inputmode="tel" autocomplete="tel" required>
-        </div>
-        <div class="field">
-          <label for="address">Address</label>
-          <input id="address" name="address" autocomplete="street-address" required>
-        </div>
+      <div id="signupContent" class="embed-wrapper" aria-live="polite"></div>
 
-        <button class="submit-btn" id="submitBtn" type="submit">Submit</button>
-        <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
-      </form>
+      <div id="signupFallback" class="fallback" hidden>
+        <p>We could not display the embedded form here.</p>
+        <a id="signupFallbackLink" class="action-link" target="_blank" rel="noopener noreferrer">Open sign-up form in a new tab</a>
+      </div>
     </div>
   </section>
 
@@ -246,123 +50,15 @@
     <div class="modal__backdrop" data-close-modal="infoModal"></div>
     <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
       <div class="modal__header">
-        <h2 class="modal__title" id="infoTitle">About This Map</h2>
-        <button class="close-btn" type="button" data-close-modal="infoModal" aria-label="Close information">×</button>
+        <h2 class="modal__title" id="infoTitle">Ward Emergency Response Plan</h2>
+        <button class="close-btn" type="button" data-close-modal="infoModal" aria-label="Close plan modal">×</button>
       </div>
-      <p class="info-copy">
-        This site displays the ward emergency planning map and allows residents to opt in for emergency communications.
-        The map content is served from <code>/map/</code> so the export can be replaced independently of this site shell.
-      </p>
+      <div id="wardPlanContent" class="ward-plan" aria-live="polite">
+        <p class="loading">Loading ward plan…</p>
+      </div>
     </div>
   </section>
 
-  <script>
-    const openSignup = document.getElementById('openSignup');
-    const openInfo = document.getElementById('openInfo');
-    const signupModal = document.getElementById('signupModal');
-    const infoModal = document.getElementById('infoModal');
-    const signupForm = document.getElementById('signupForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const formMessage = document.getElementById('formMessage');
-
-    let appConfig = null;
-    let activeModal = null;
-
-    async function loadConfig() {
-      try {
-        const response = await fetch('./config.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error('Config not found');
-        appConfig = await response.json();
-      } catch (_error) {
-        appConfig = null;
-      }
-    }
-
-    function setMessage(text, state) {
-      formMessage.textContent = text;
-      formMessage.dataset.state = state || '';
-    }
-
-    function openModal(modal) {
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
-      activeModal = modal;
-    }
-
-    function closeModal(modal) {
-      modal.classList.remove('is-open');
-      modal.setAttribute('aria-hidden', 'true');
-      if (activeModal === modal) activeModal = null;
-    }
-
-    document.addEventListener('click', (event) => {
-      const closeTarget = event.target.closest('[data-close-modal]');
-      if (closeTarget) {
-        const id = closeTarget.getAttribute('data-close-modal');
-        const modal = document.getElementById(id);
-        if (modal) closeModal(modal);
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && activeModal) {
-        closeModal(activeModal);
-      }
-    });
-
-    openSignup.addEventListener('click', () => openModal(signupModal));
-    openInfo.addEventListener('click', () => openModal(infoModal));
-
-    signupForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const name = signupForm.fullName.value.trim();
-      const phone = signupForm.phone.value.trim();
-      const address = signupForm.address.value.trim();
-
-      if (!name || !phone || !address) {
-        setMessage('Please complete full name, phone number, and address.', 'error');
-        return;
-      }
-
-      if (!appConfig || !appConfig.googleAppsScriptUrl) {
-        setMessage('Signup is temporarily unavailable. Missing endpoint configuration.', 'error');
-        return;
-      }
-
-      const payload = {
-        name,
-        phone,
-        address,
-        submitted_at: new Date().toISOString(),
-        source: 'ward-emergency-plan-site'
-      };
-
-      try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-        setMessage('', '');
-
-        const response = await fetch(appConfig.googleAppsScriptUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed request');
-        }
-
-        signupForm.reset();
-        setMessage('Thanks! Your signup has been received.', 'success');
-      } catch (_error) {
-        setMessage('Sorry, there was a problem submitting the form. Please try again.', 'error');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
-      }
-    });
-
-    loadConfig();
-  </script>
+  <script src="./app.js" defer></script>
 </body>
 </html>

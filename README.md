@@ -1,98 +1,126 @@
-# Community Map Viewer Template
+# Ward Emergency Response Site Template
 
-A beginner-friendly **GitHub template repository** for publishing a mobile-friendly QGIS web map (exported with **qgis2web**) using **GitHub Pages**.
+A static, GitHub Pages-friendly template for a ward emergency response map site.
 
-## What this repository is
+This template is designed for **non-technical maintenance**:
+- replace one map file (or switch map path in config)
+- update one `config.json`
+- optionally update a Google Doc (published to web) for ward plan content
+- no backend, no build step
 
-This is a static website template you can copy into your own GitHub account and publish as a shareable map website.
-
-It includes:
-- A fullscreen app shell at the repository root that embeds the map and overlays site controls.
-- A placeholder `/map` folder that you replace with your own qgis2web export.
-- Documentation for non-technical users.
-
-## Who it is for
-
-This repository is for:
-- Community groups
-- Nonprofits
-- Local projects
-- GIS beginners
-- Anyone who wants a quick, no-backend way to host a QGIS web map online
-
-## How it works
-
-- qgis2web exports maps as static **HTML/CSS/JS** files.
-- GitHub Pages can host static files directly from a branch.
-- This template is designed so users only need to replace the contents of `/map`.
-- The root shell (`/index.html`) embeds `./map/` so visitors load directly into the map experience.
-
-## Repository structure
+## Files you will edit
 
 ```text
 /
-  index.html  # app shell + overlays + form modal
-  README.md
-  MAP-REPLACEMENT-INSTRUCTIONS.md
-  .nojekyll
-  /map
-    index.html
-    /css
-    /js
-    /data
-    /images
-    /legend
+  index.html
+  styles.css
+  app.js
+  config.json               # Your live settings
+  config.json.example       # Commented reference template
+  /content
+    ward-plan.html          # Local fallback ward plan content
+  /assets/maps
+    current-map.svg         # Replaceable map asset
 ```
 
-## Quick start
+## Quick setup
 
-1. Click **Use this template** on GitHub.
-2. Create a new repository in your own account or organization.
-3. Clone your new repository (or use the GitHub web editor).
-4. Follow the replacement instructions below.
-5. Enable GitHub Pages from **main branch / root**.
-6. Open your GitHub Pages URL and share it.
+1. Copy `config.json.example` to `config.json` (or edit existing `config.json`).
+2. Replace `assets/maps/current-map.svg` with your map (or set `map_asset` to another path).
+3. Add your Google Form embed URL in `signup_form.embed_url`.
+4. Choose ward plan source:
+   - Google Doc published HTML URL (`google_doc_html`), or
+   - local fallback file (`local_html` + `content/ward-plan.html`).
+5. Push to GitHub and enable GitHub Pages from branch root.
 
-## How to replace the map
+---
 
-Use this exact process:
+## 1) Replace the map file
 
-1. Click **Use this template**.
-2. Create a new repository in your account.
-3. Export your map from QGIS using **qgis2web**.
-4. Delete the current contents of `/map`.
-5. Copy in your own qgis2web export so the exported `index.html` is at `/map/index.html`.
-6. Commit and push your changes.
-7. Enable GitHub Pages from **main branch root**.
-8. Open and share your GitHub Pages URL.
+### Option A (easiest): keep same filename
+- Replace `assets/maps/current-map.svg` with your own map image/file.
+- No code edits needed.
 
-## How to enable GitHub Pages
+### Option B: use a different file/path
+- Put your map where you want (for example `assets/maps/2026-ward-map.png`).
+- Update this in `config.json`:
 
-1. In your repository, go to **Settings** → **Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select branch: **main**.
-4. Select folder: **/ (root)**.
-5. Save.
-6. Wait for deployment, then open the published URL.
+```json
+"map_asset": "assets/maps/2026-ward-map.png"
+```
 
-> GitHub Pages can publish from a branch and either the branch root (`/`) or `/docs` folder.  
-> This template recommends **main branch root** for simplicity.
+Supported map assets:
+- image files (`.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`)
+- HTML map paths (`map/` or `path/to/map.html`) if you want to embed a dynamic map app
 
-## How to turn the repository into a GitHub template
+---
 
-If you are the repository owner and want others to reuse it:
+## 2) Configure Google Form sign-up
 
-1. Open your repository on GitHub.
-2. Go to **Settings**.
-3. In the **General** section, enable **Template repository**.
-4. Share your repository link.
+In `config.json`:
 
-Then users can click **Use this template** to generate their own copy.
+```json
+"signup_form": {
+  "source_type": "google_form_embed",
+  "embed_url": "https://docs.google.com/forms/d/e/.../viewform?embedded=true"
+}
+```
 
-## Notes and limitations
+How to get embed URL:
+1. Open your Google Form.
+2. Click **Send**.
+3. Select the **<> Embed HTML** tab.
+4. Copy the URL from the iframe `src` and paste into `embed_url`.
 
-- This template is plain static hosting only (no backend and no build step).
-- qgis2web output quality and behavior depend on your QGIS project settings and the selected web library.
-- Large datasets can load slowly on mobile devices.
-- The map will be publicly viewable once GitHub Pages is enabled.
-- On some GitHub plans/settings, Pages for private repositories may still be publicly reachable by URL. **Do not publish sensitive data.**
+If Google blocks embedding, the modal automatically shows a fallback button to open the form in a new tab.
+
+---
+
+## 3) Configure ward plan from Google Doc
+
+In `config.json`:
+
+```json
+"ward_plan": {
+  "source_type": "google_doc_html",
+  "url": "https://docs.google.com/document/d/e/.../pub"
+}
+```
+
+How to publish a Google Doc for this:
+1. Open your doc.
+2. **File → Share → Publish to web**.
+3. Publish as a webpage.
+4. Copy the published URL into `ward_plan.url`.
+
+The site fetches this HTML at runtime and sanitizes it before rendering.
+
+---
+
+## 4) Use local HTML fallback instead
+
+If you do not want Google Docs, use:
+
+```json
+"ward_plan": {
+  "source_type": "local_html",
+  "url": "content/ward-plan.html"
+}
+```
+
+Then edit `content/ward-plan.html` directly.
+
+---
+
+## 5) Config reference
+
+Use `config.json.example` as your commented reference.
+For normal updates, only edit `config.json` and replace your map asset.
+
+---
+
+## Notes
+
+- This is a pure static site and works on GitHub Pages.
+- If `config.json` is missing or invalid, the page shows a visible error banner.
+- If ward plan loading fails, the info modal shows an error message.
