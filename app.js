@@ -210,32 +210,28 @@ async function submitSignup(payload, signupConfig) {
     throw new Error('Sign-up endpoint URL is missing. Add signup_form.endpoint_url in config.json.');
   }
 
-  const requestPayload = {
-    ...payload,
-    sheet_tab_name: signupConfig.sheet_tab_name || 'House List'
-  };
+  const formBody = new URLSearchParams();
+  formBody.append('full_name', payload.full_name);
+  formBody.append('address', payload.address);
+  formBody.append('phone', payload.phone);
+  formBody.append('sheet_tab_name', signupConfig.sheet_tab_name || 'House List');
 
   const response = await fetch(endpointURL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestPayload)
+    body: formBody
   });
 
   const responseText = await response.text();
+
   let responseJSON = null;
-  if (responseText) {
-    try {
-      responseJSON = JSON.parse(responseText);
-    } catch (error) {
-      responseJSON = null;
-    }
+  try {
+    responseJSON = responseText ? JSON.parse(responseText) : null;
+  } catch (error) {
+    responseJSON = null;
   }
 
   if (!response.ok) {
-    const serverMessage = responseJSON?.message || responseText || `Request failed (${response.status})`;
-    throw new Error(serverMessage);
+    throw new Error(responseJSON?.message || responseText || `Request failed (${response.status})`);
   }
 
   return responseJSON;
