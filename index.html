@@ -28,6 +28,12 @@
     </svg>
   </button>
 
+  <button class="fab fab-share" id="openShare" type="button" aria-label="Open share options">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M18 15.5a2.5 2.5 0 0 0-2.17 1.26l-6.6-3.3a2.44 2.44 0 0 0 0-2.92l6.6-3.3a2.5 2.5 0 1 0-.67-1.34l-6.75 3.38a2.5 2.5 0 1 0 0 5.44l6.75 3.38A2.5 2.5 0 1 0 18 15.5Z" fill="currentColor"/>
+    </svg>
+  </button>
+
   <section class="modal" id="signupModal" aria-hidden="true">
     <div class="modal__backdrop" data-close-modal="signupModal"></div>
     <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
@@ -53,6 +59,56 @@
     </div>
   </section>
 
+  <section class="modal" id="shareModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal="shareModal"></div>
+    <div class="modal__panel modal__panel--share" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="shareTitle">Share this emergency map</h2>
+        <button class="close-btn" type="button" data-close-modal="shareModal" aria-label="Close share modal">×</button>
+      </div>
+
+      <div class="share-actions" aria-label="Share options">
+        <button id="shareNative" type="button" class="share-option share-option--native is-hidden" aria-label="Share with installed apps">
+          <span class="share-option__icon" aria-hidden="true">📱</span>
+          <span class="share-option__text">
+            <strong>Share…</strong>
+            <small>Use your device share sheet</small>
+          </span>
+        </button>
+
+        <a id="shareEmail" class="share-option" href="#" aria-label="Share via email">
+          <span class="share-option__icon" aria-hidden="true">✉️</span>
+          <span class="share-option__text">
+            <strong>Email</strong>
+            <small>Open your email app</small>
+          </span>
+        </a>
+
+        <button id="copyLink" type="button" class="share-option" aria-label="Copy page link">
+          <span class="share-option__icon" aria-hidden="true">🔗</span>
+          <span class="share-option__text">
+            <strong>Copy Link</strong>
+            <small>Copy this page URL</small>
+          </span>
+        </button>
+      </div>
+
+      <p id="shareStatus" class="share-status is-hidden" role="status" aria-live="polite"></p>
+
+      <div id="copyFallback" class="copy-fallback is-hidden" aria-label="Manual copy link">
+        <label for="shareFallbackInput">Copy this link manually:</label>
+        <input id="shareFallbackInput" type="text" readonly>
+      </div>
+
+      <div class="qr-block" aria-label="QR code for this page">
+        <h3 class="qr-block__title">QR Code</h3>
+        <div id="qrCodeContainer" class="qr-code" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tiny client-side QR code generator (no backend): qrcode-generator -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" defer></script>
   <script src="./app.js" defer></script>
 </body>
 </html>
