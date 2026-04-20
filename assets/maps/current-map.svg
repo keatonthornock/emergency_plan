@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Ward map placeholder</title>
+  <desc id="desc">Replace this file with your current ward map image and keep the same path, or update config.json map_asset.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#edf4ff" />
+      <stop offset="100%" stop-color="#d5e6ff" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <g fill="none" stroke="#7aa0d8" stroke-width="3" opacity="0.5">
+    <path d="M120 180h1360M120 340h1360M120 500h1360M120 660h1360M120 820h1360"/>
+    <path d="M180 120v760M420 120v760M660 120v760M900 120v760M1140 120v760M1380 120v760"/>
+  </g>
+  <g fill="#214b87">
+    <text x="800" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="56" font-weight="700">Ward Emergency Response Map</text>
+    <text x="800" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="30">Replace assets/maps/current-map.svg with your current map file.</text>
+    <text x="800" y="565" text-anchor="middle" font-family="Arial, sans-serif" font-size="26">Or change \"map_asset\" in config.json to another file path.</text>
+  </g>
+</svg>

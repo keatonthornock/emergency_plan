@@ -1,14 +1,22 @@
 {
+  "_comment_site_title": "Shown in browser tab and used as the main site name.",
   "site_title": "Ward Emergency Response Map",
+
+  "_comment_map_asset": "Set to your map file path. Supports image files (.png/.jpg/.svg) or an HTML map path like 'map/'.",
   "map_asset": "assets/maps/current-map.svg",
+
   "ward_plan": {
+    "_comment_source_type": "Use 'google_doc_html' for a published Google Doc URL, or 'local_html' for a local file in this repo.",
     "source_type": "local_html",
     "url": "content/ward-plan.html"
   },
+
   "signup_form": {
+    "_comment_source_type": "Use 'google_form_embed' and paste your Google Form embed URL.",
     "source_type": "google_form_embed",
     "embed_url": ""
   },
+
   "contacts": {
     "emergency_center": "(801) 786-7911",
     "harrisville_police": "(801) 782-4100",
