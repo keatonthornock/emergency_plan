@@ -3,143 +3,366 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Template landing page for a GitHub Pages-hosted qgis2web map.">
-  <title>Community Map Viewer Template</title>
+  <meta name="description" content="Ward emergency response plan map and signup.">
+  <title>Ward Emergency Plan</title>
   <style>
     :root {
-      --bg: #f3f6fb;
-      --card: #ffffff;
-      --text: #1f2a37;
-      --muted: #5f728c;
-      --primary: #1e5bb8;
-      --primary-hover: #194d9b;
-      --border: #d9e2ef;
-      --shadow: 0 10px 30px rgba(22, 34, 58, 0.08);
+      --shadow: 0 6px 20px rgba(20, 31, 50, 0.18);
+      --btn-size: 56px;
       --radius: 14px;
+      --focus: #1a73e8;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      width: 100%;
+      height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text);
-      background: linear-gradient(180deg, #eef3fa 0%, #f9fbfe 100%);
-      line-height: 1.6;
+      background: #f4f6f9;
     }
 
-    .wrap {
-      min-height: 100vh;
+    .app-shell {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #e9edf3;
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #e9edf3;
+    }
+
+    .fab {
+      position: fixed;
+      z-index: 20;
+      width: var(--btn-size);
+      height: var(--btn-size);
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      color: #1e2a3a;
+      box-shadow: var(--shadow);
       display: grid;
       place-items: center;
-      padding: 2rem 1rem;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      touch-action: manipulation;
     }
 
-    .card {
-      width: min(760px, 100%);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .fab:hover { transform: translateY(-1px); }
+    .fab:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
     }
 
-    .hero {
-      padding: 2rem 1.25rem;
-      text-align: center;
+    .fab-signup {
+      left: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
     }
 
-    h1 {
-      margin: 0 0 0.5rem;
-      font-size: clamp(1.7rem, 4vw, 2.3rem);
-      line-height: 1.2;
-      color: #14325c;
+    .fab-info {
+      right: 16px;
+      top: calc(16px + env(safe-area-inset-top));
     }
 
-    p {
-      margin: 0.5rem 0;
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .actions {
-      margin-top: 1.5rem;
-      display: flex;
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
       justify-content: center;
+      padding: 18px;
     }
 
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      background: var(--primary);
-      color: #fff;
-      padding: 0.85rem 1.3rem;
-      border-radius: 10px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      border: 1px solid transparent;
-      transition: transform 120ms ease, background 120ms ease;
+    .modal.is-open { display: flex; }
+
+    .modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 18, 30, 0.52);
     }
 
-    .btn:hover,
-    .btn:focus-visible {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
+    .modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(560px, 100%);
+      max-height: min(90vh, 720px);
+      overflow: auto;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 20px 50px rgba(15, 28, 48, 0.28);
+      padding: 1rem 1rem 1.25rem;
     }
 
-    .meta {
-      border-top: 1px solid var(--border);
-      background: #f8fbff;
-      padding: 1.1rem 1.25rem 1.4rem;
+    .modal__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
     }
 
-    .meta h2 {
-      margin: 0 0 0.35rem;
-      font-size: 1.05rem;
-      color: #20426f;
-    }
-
-    .meta p {
+    .modal__title {
       margin: 0;
+      font-size: 1.2rem;
+      color: #17263a;
+    }
+
+    .close-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.55rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #4a5a72;
+      padding: 0.2rem 0.4rem;
+      border-radius: 8px;
+    }
+
+    .close-btn:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .help-text {
+      margin: 0.45rem 0 1rem;
+      color: #4d607a;
+      font-size: 0.95rem;
+    }
+
+    .field {
+      margin-bottom: 0.8rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+      color: #1f3046;
       font-size: 0.96rem;
     }
 
-    code {
-      background: #edf3fb;
-      border: 1px solid #d6e2f2;
-      border-radius: 6px;
-      padding: 0.1rem 0.35rem;
-      color: #234f88;
-      font-size: 0.92em;
+    input {
+      width: 100%;
+      border: 1px solid #c9d4e3;
+      border-radius: 10px;
+      padding: 0.72rem 0.75rem;
+      font-size: 1rem;
+    }
+
+    input:focus-visible {
+      outline: 2px solid var(--focus);
+      border-color: var(--focus);
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: #1e5bb8;
+      color: #fff;
+      padding: 0.8rem 0.95rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.3rem;
+    }
+
+    .submit-btn[disabled] {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .form-message {
+      margin-top: 0.75rem;
+      min-height: 1.35rem;
+      font-size: 0.95rem;
+    }
+
+    .form-message[data-state="success"] { color: #176a3f; }
+    .form-message[data-state="error"] { color: #9b1c1c; }
+
+    .info-copy {
+      color: #2e425d;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      margin: 0.6rem 0 0;
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card" aria-labelledby="page-title">
-      <div class="hero">
-        <!-- Main landing content for template users -->
-        <h1 id="page-title">Community Map Viewer Template</h1>
-        <p>This repository hosts a mobile-friendly map site.</p>
-        <p>Your interactive map lives in <code>/map/</code>.</p>
-
-        <div class="actions">
-          <!-- Keep this link relative so it works on GitHub Pages project URLs -->
-          <a class="btn" href="./map/">Open Map</a>
-        </div>
-      </div>
-
-      <div class="meta">
-        <!-- Secondary explanation for future maintainers and template users -->
-        <h2>About this template</h2>
-        <p>
-          This is a starter template for publishing QGIS maps exported with qgis2web on GitHub Pages.
-          Replace only the contents of <code>/map</code> with your own qgis2web export, then enable Pages.
-        </p>
-      </div>
-    </section>
+  <main class="app-shell" aria-label="Ward emergency map">
+    <iframe class="map-frame" src="./map/" title="Ward emergency map"></iframe>
   </main>
+
+  <button class="fab fab-signup" id="openSignup" type="button" aria-label="Open signup form">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 12c2.5 0 4.3-1.9 4.3-4.3S14.5 3.4 12 3.4s-4.3 1.9-4.3 4.3S9.5 12 12 12Zm0 2.2c-3.6 0-6.6 2.1-7.4 5.1-.1.5.3 1 .8 1h13.1c.5 0 .9-.5.8-1-.8-3-3.8-5.1-7.3-5.1Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <button class="fab fab-info" id="openInfo" type="button" aria-label="Open site information">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2.7a9.3 9.3 0 1 0 0 18.6 9.3 9.3 0 0 0 0-18.6Zm0 4.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm1.3 10.4h-2.6v-1.3h.6v-4h-.6v-1.3h2v5.3h.6v1.3Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <section class="modal" id="signupModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal="signupModal"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="signupTitle">Ward Emergency Response Signup</h2>
+        <button class="close-btn" type="button" data-close-modal="signupModal" aria-label="Close signup">×</button>
+      </div>
+      <p class="help-text">Opt in to the ward emergency response communication and contact list.</p>
+
+      <form id="signupForm" novalidate>
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input id="fullName" name="fullName" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" name="phone" inputmode="tel" autocomplete="tel" required>
+        </div>
+        <div class="field">
+          <label for="address">Address</label>
+          <input id="address" name="address" autocomplete="street-address" required>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" type="submit">Submit</button>
+        <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="modal" id="infoModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal="infoModal"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="infoTitle">About This Map</h2>
+        <button class="close-btn" type="button" data-close-modal="infoModal" aria-label="Close information">×</button>
+      </div>
+      <p class="info-copy">
+        This site displays the ward emergency planning map and allows residents to opt in for emergency communications.
+        The map content is served from <code>/map/</code> so the export can be replaced independently of this site shell.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const openSignup = document.getElementById('openSignup');
+    const openInfo = document.getElementById('openInfo');
+    const signupModal = document.getElementById('signupModal');
+    const infoModal = document.getElementById('infoModal');
+    const signupForm = document.getElementById('signupForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formMessage = document.getElementById('formMessage');
+
+    let appConfig = null;
+    let activeModal = null;
+
+    async function loadConfig() {
+      try {
+        const response = await fetch('./config.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Config not found');
+        appConfig = await response.json();
+      } catch (_error) {
+        appConfig = null;
+      }
+    }
+
+    function setMessage(text, state) {
+      formMessage.textContent = text;
+      formMessage.dataset.state = state || '';
+    }
+
+    function openModal(modal) {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      activeModal = modal;
+    }
+
+    function closeModal(modal) {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      if (activeModal === modal) activeModal = null;
+    }
+
+    document.addEventListener('click', (event) => {
+      const closeTarget = event.target.closest('[data-close-modal]');
+      if (closeTarget) {
+        const id = closeTarget.getAttribute('data-close-modal');
+        const modal = document.getElementById(id);
+        if (modal) closeModal(modal);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && activeModal) {
+        closeModal(activeModal);
+      }
+    });
+
+    openSignup.addEventListener('click', () => openModal(signupModal));
+    openInfo.addEventListener('click', () => openModal(infoModal));
+
+    signupForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = signupForm.fullName.value.trim();
+      const phone = signupForm.phone.value.trim();
+      const address = signupForm.address.value.trim();
+
+      if (!name || !phone || !address) {
+        setMessage('Please complete full name, phone number, and address.', 'error');
+        return;
+      }
+
+      if (!appConfig || !appConfig.googleAppsScriptUrl) {
+        setMessage('Signup is temporarily unavailable. Missing endpoint configuration.', 'error');
+        return;
+      }
+
+      const payload = {
+        name,
+        phone,
+        address,
+        submitted_at: new Date().toISOString(),
+        source: 'ward-emergency-plan-site'
+      };
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        setMessage('', '');
+
+        const response = await fetch(appConfig.googleAppsScriptUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed request');
+        }
+
+        signupForm.reset();
+        setMessage('Thanks! Your signup has been received.', 'success');
+      } catch (_error) {
+        setMessage('Sorry, there was a problem submitting the form. Please try again.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      }
+    });
+
+    loadConfig();
+  </script>
 </body>
 </html>
