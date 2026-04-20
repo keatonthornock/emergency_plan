@@ -1,7 +1,8 @@
 const state = {
   config: null,
   activeModal: null,
-  wardPlanLoaded: false
+  wardPlanLoaded: false,
+  submittingSignup: false
 };
 
 const refs = {
@@ -12,8 +13,6 @@ const refs = {
   signupModal: document.getElementById('signupModal'),
   infoModal: document.getElementById('infoModal'),
   signupContent: document.getElementById('signupContent'),
-  signupFallback: document.getElementById('signupFallback'),
-  signupFallbackLink: document.getElementById('signupFallbackLink'),
   wardPlanContent: document.getElementById('wardPlanContent')
 };
 
@@ -122,42 +121,174 @@ function renderMap(mapAsset) {
   refs.mapContainer.innerHTML = `<p class="loading">Unsupported map asset path: <code>${mapAsset}</code></p>`;
 }
 
+function normalizeWhitespace(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function setSignupStatus(message, tone = 'info') {
+  const statusEl = document.getElementById('signupStatus');
+  if (!statusEl) return;
+
+  statusEl.textContent = message;
+  statusEl.classList.remove('is-hidden', 'signup-status--success', 'signup-status--error', 'signup-status--info');
+  statusEl.classList.add(`signup-status--${tone}`);
+}
+
+function clearSignupStatus() {
+  const statusEl = document.getElementById('signupStatus');
+  if (!statusEl) return;
+
+  statusEl.textContent = '';
+  statusEl.classList.add('is-hidden');
+  statusEl.classList.remove('signup-status--success', 'signup-status--error', 'signup-status--info');
+}
+
+function getSignupPayload(formEl) {
+  const formData = new FormData(formEl);
+  return {
+    full_name: normalizeWhitespace(formData.get('full_name')),
+    address: normalizeWhitespace(formData.get('address')),
+    phone: normalizeWhitespace(formData.get('phone'))
+  };
+}
+
+function validateSignupPayload(payload) {
+  const missingFields = [];
+  if (!payload.full_name) missingFields.push('Full name');
+  if (!payload.address) missingFields.push('Address');
+  if (!payload.phone) missingFields.push('Phone');
+
+  if (missingFields.length > 0) {
+    return `Please fill out all required fields: ${missingFields.join(', ')}.`;
+  }
+
+  return null;
+}
+
+async function submitSignup(payload, signupConfig) {
+  const endpointURL = signupConfig?.endpoint_url?.trim();
+  if (!endpointURL) {
+    throw new Error('Sign-up endpoint URL is missing. Add signup_form.endpoint_url in config.json.');
+  }
+
+  const requestPayload = {
+    ...payload,
+    sheet_tab_name: signupConfig.sheet_tab_name || 'House List'
+  };
+
+  const response = await fetch(endpointURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestPayload)
+  });
+
+  const responseText = await response.text();
+  let responseJSON = null;
+  if (responseText) {
+    try {
+      responseJSON = JSON.parse(responseText);
+    } catch (error) {
+      responseJSON = null;
+    }
+  }
+
+  if (!response.ok) {
+    const serverMessage = responseJSON?.message || responseText || `Request failed (${response.status})`;
+    throw new Error(serverMessage);
+  }
+
+  return responseJSON;
+}
+
+function renderSignupResult(result) {
+  if (!result) {
+    setSignupStatus('Sign-up submitted successfully.', 'success');
+    return;
+  }
+
+  if (typeof result.message === 'string' && result.message.trim()) {
+    const tone = result.success === false ? 'error' : 'success';
+    setSignupStatus(result.message, tone);
+    return;
+  }
+
+  if (result.queued_for_review) {
+    setSignupStatus('Your sign-up was received and queued for review due to a data conflict.', 'info');
+    return;
+  }
+
+  setSignupStatus('Sign-up submitted successfully.', 'success');
+}
+
 function renderSignupForm(signupForm) {
   refs.signupContent.innerHTML = '';
-  refs.signupFallback.hidden = true;
 
-  const embedURL = signupForm?.embed_url?.trim();
-  if (!embedURL) {
-    refs.signupContent.innerHTML = '<p class="loading">Sign-up form is not configured yet.</p>';
-    return;
-  }
-
-  refs.signupFallbackLink.href = embedURL;
-
-  if (signupForm.source_type !== 'google_form_embed') {
+  const sourceType = signupForm?.source_type?.trim();
+  if (sourceType !== 'apps_script_endpoint') {
     refs.signupContent.innerHTML = '<p class="loading">Unsupported sign-up source type in config.</p>';
-    refs.signupFallback.hidden = false;
     return;
   }
 
-  const iframe = document.createElement('iframe');
-  iframe.src = embedURL;
-  iframe.title = 'Ward emergency sign-up form';
-  iframe.loading = 'lazy';
+  refs.signupContent.innerHTML = `
+    <form id="signupForm" class="signup-form" novalidate>
+      <label class="form-field">
+        <span>Full name *</span>
+        <input type="text" name="full_name" autocomplete="name" required>
+      </label>
 
-  let loaded = false;
-  iframe.addEventListener('load', () => {
-    loaded = true;
+      <label class="form-field">
+        <span>Address *</span>
+        <input type="text" name="address" autocomplete="street-address" required>
+      </label>
+
+      <label class="form-field">
+        <span>Phone *</span>
+        <input type="tel" name="phone" autocomplete="tel" required>
+      </label>
+
+      <button id="signupSubmit" class="action-btn" type="submit">Submit</button>
+      <p id="signupStatus" class="signup-status is-hidden" role="status" aria-live="polite"></p>
+    </form>
+  `;
+
+  const formEl = document.getElementById('signupForm');
+  const submitBtn = document.getElementById('signupSubmit');
+
+  formEl.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    clearSignupStatus();
+
+    if (state.submittingSignup) return;
+
+    const payload = getSignupPayload(formEl);
+    formEl.full_name.value = payload.full_name;
+    formEl.address.value = payload.address;
+    formEl.phone.value = payload.phone;
+
+    const validationMessage = validateSignupPayload(payload);
+    if (validationMessage) {
+      setSignupStatus(validationMessage, 'error');
+      return;
+    }
+
+    state.submittingSignup = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      const result = await submitSignup(payload, signupForm);
+      renderSignupResult(result);
+      formEl.reset();
+    } catch (error) {
+      setSignupStatus(`Sign-up failed: ${error.message}`, 'error');
+    } finally {
+      state.submittingSignup = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+    }
   });
-  iframe.addEventListener('error', () => {
-    refs.signupFallback.hidden = false;
-  });
-
-  setTimeout(() => {
-    if (!loaded) refs.signupFallback.hidden = false;
-  }, 5000);
-
-  refs.signupContent.appendChild(iframe);
 }
 
 async function fetchWardPlanHTML(planConfig) {

@@ -2,7 +2,7 @@
   "_comment_site_title": "Shown in browser tab and used as the main site name.",
   "site_title": "Ward Emergency Response Map",
 
-  "_comment_map_asset": "Set to your map file path. Supports image files (.png/.jpg/.svg) or an HTML map path like 'map/'.",
+  "_comment_map_asset": "Set to your map file path. Supports image files (.png/.jpg/.svg) or an HTML map path like 'map/' or 'map/index.html' from qgis2web.",
   "map_asset": "assets/maps/current-map.svg",
 
   "ward_plan": {
@@ -12,9 +12,10 @@
   },
 
   "signup_form": {
-    "_comment_source_type": "Use 'google_form_embed' and paste your Google Form embed URL.",
-    "source_type": "google_form_embed",
-    "embed_url": ""
+    "_comment_source_type": "Use 'apps_script_endpoint' and paste your deployed Google Apps Script web app URL.",
+    "source_type": "apps_script_endpoint",
+    "endpoint_url": "",
+    "sheet_tab_name": "House List"
   },
 
   "contacts": {
