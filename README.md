@@ -7,7 +7,7 @@ A beginner-friendly **GitHub template repository** for publishing a mobile-frien
 This is a static website template you can copy into your own GitHub account and publish as a shareable map website.
 
 It includes:
-- A polished landing page at the repository root.
+- A fullscreen app shell at the repository root that embeds the map and overlays site controls.
 - A placeholder `/map` folder that you replace with your own qgis2web export.
 - Documentation for non-technical users.
 
@@ -25,13 +25,13 @@ This repository is for:
 - qgis2web exports maps as static **HTML/CSS/JS** files.
 - GitHub Pages can host static files directly from a branch.
 - This template is designed so users only need to replace the contents of `/map`.
-- The landing page (`/index.html`) links to `./map/`.
+- The root shell (`/index.html`) embeds `./map/` so visitors load directly into the map experience.
 
 ## Repository structure
 
 ```text
 /
-  index.html
+  index.html  # app shell + overlays + form modal
   README.md
   MAP-REPLACEMENT-INSTRUCTIONS.md
   .nojekyll
