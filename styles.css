@@ -95,6 +95,11 @@ html, body {
   top: calc(16px + env(safe-area-inset-top));
 }
 
+.fab-share {
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -123,6 +128,10 @@ html, body {
   border-radius: var(--radius);
   box-shadow: 0 20px 50px rgba(15, 28, 48, 0.28);
   padding: 1rem 1rem 1.25rem;
+}
+
+.modal__panel--share {
+  width: min(520px, 100%);
 }
 
 .modal__header {
@@ -158,6 +167,128 @@ html, body {
   margin: 0.45rem 0 1rem;
   color: #4d607a;
   font-size: 0.95rem;
+}
+
+.share-actions {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.share-option {
+  width: 100%;
+  border: 1px solid #d8e0ec;
+  border-radius: 12px;
+  background: #fff;
+  color: #1f314a;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+}
+
+.share-option:hover {
+  border-color: #b8c7dd;
+  background: #f8fbff;
+}
+
+.share-option:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.share-option__icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #edf3fd;
+  font-size: 1.1rem;
+}
+
+.share-option__text {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.share-option__text strong {
+  color: #1f314a;
+  font-size: 0.97rem;
+}
+
+.share-option__text small {
+  color: #526580;
+  font-size: 0.85rem;
+}
+
+.share-option--native {
+  border-color: #b9d4ff;
+  background: #eff5ff;
+}
+
+.share-status {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: #eef6ff;
+  border: 1px solid #bfd5f7;
+  color: #1f4e87;
+  font-size: 0.92rem;
+}
+
+.copy-fallback {
+  margin-top: 0.65rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.copy-fallback label {
+  color: #2e425d;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.copy-fallback input {
+  width: 100%;
+  border: 1px solid #cad5e5;
+  border-radius: 10px;
+  padding: 0.6rem 0.65rem;
+  font-size: 0.92rem;
+  color: #1f314a;
+}
+
+.qr-block {
+  margin-top: 1rem;
+  border-top: 1px solid #e5ebf4;
+  padding-top: 0.95rem;
+}
+
+.qr-block__title {
+  margin: 0 0 0.5rem;
+  color: #253a57;
+  font-size: 1rem;
+}
+
+.qr-code {
+  min-height: 170px;
+  border: 1px dashed #c8d5e8;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  padding: 0.8rem;
+  background: #f9fbfe;
+}
+
+.qr-code img,
+.qr-code canvas {
+  width: min(220px, 70vw);
+  height: auto;
+  max-width: 100%;
 }
 
 .signup-form {
@@ -261,5 +392,9 @@ html, body {
 
   .modal__panel {
     max-height: 92vh;
+  }
+
+  .share-option {
+    padding: 0.75rem;
   }
 }

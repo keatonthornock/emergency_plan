@@ -10,10 +10,19 @@ const refs = {
   configError: document.getElementById('configError'),
   openSignup: document.getElementById('openSignup'),
   openInfo: document.getElementById('openInfo'),
+  openShare: document.getElementById('openShare'),
   signupModal: document.getElementById('signupModal'),
   infoModal: document.getElementById('infoModal'),
+  shareModal: document.getElementById('shareModal'),
   signupContent: document.getElementById('signupContent'),
-  wardPlanContent: document.getElementById('wardPlanContent')
+  wardPlanContent: document.getElementById('wardPlanContent'),
+  shareEmail: document.getElementById('shareEmail'),
+  shareNative: document.getElementById('shareNative'),
+  copyLink: document.getElementById('copyLink'),
+  shareStatus: document.getElementById('shareStatus'),
+  copyFallback: document.getElementById('copyFallback'),
+  shareFallbackInput: document.getElementById('shareFallbackInput'),
+  qrCodeContainer: document.getElementById('qrCodeContainer')
 };
 
 function showConfigError(message) {
@@ -180,6 +189,104 @@ function clearSignupStatus() {
   statusEl.textContent = '';
   statusEl.classList.add('is-hidden');
   statusEl.classList.remove('signup-status--success', 'signup-status--error', 'signup-status--info');
+}
+
+function setShareStatus(message) {
+  refs.shareStatus.textContent = message;
+  refs.shareStatus.classList.remove('is-hidden');
+}
+
+function clearShareStatus() {
+  refs.shareStatus.textContent = '';
+  refs.shareStatus.classList.add('is-hidden');
+}
+
+function getShareURL() {
+  return window.location.href;
+}
+
+function getShareTitle() {
+  return document.title || 'Ward Emergency Response Map';
+}
+
+function setupShareEmailLink() {
+  const shareURL = getShareURL();
+  const subject = encodeURIComponent('Ward Emergency Response Map');
+  const body = encodeURIComponent(`Here is the Ward Emergency Response Map:\n\n${shareURL}`);
+  refs.shareEmail.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+function resetShareModalUI() {
+  clearShareStatus();
+  refs.copyFallback.classList.add('is-hidden');
+  refs.shareFallbackInput.value = '';
+}
+
+function renderQRCode(url) {
+  refs.qrCodeContainer.innerHTML = '';
+
+  if (typeof window.qrcode !== 'function') {
+    refs.qrCodeContainer.innerHTML = '<p class="loading">QR code generator unavailable.</p>';
+    return;
+  }
+
+  try {
+    const qr = window.qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+
+    refs.qrCodeContainer.innerHTML = qr.createImgTag(6, 8, 'QR code for ward emergency response map');
+  } catch (error) {
+    refs.qrCodeContainer.innerHTML = '<p class="loading">Could not generate QR code.</p>';
+  }
+}
+
+function toggleNativeShareButton() {
+  if (typeof navigator.share === 'function') {
+    refs.shareNative.classList.remove('is-hidden');
+  } else {
+    refs.shareNative.classList.add('is-hidden');
+  }
+}
+
+async function onCopyLink() {
+  const shareURL = getShareURL();
+
+  try {
+    await navigator.clipboard.writeText(shareURL);
+    refs.copyFallback.classList.add('is-hidden');
+    setShareStatus('Link copied');
+  } catch (error) {
+    refs.shareFallbackInput.value = shareURL;
+    refs.copyFallback.classList.remove('is-hidden');
+    refs.shareFallbackInput.focus();
+    refs.shareFallbackInput.select();
+    setShareStatus('Clipboard access failed. Copy the link manually below.');
+  }
+}
+
+async function onNativeShare() {
+  if (typeof navigator.share !== 'function') return;
+
+  try {
+    await navigator.share({
+      title: getShareTitle(),
+      text: 'Ward Emergency Response Map',
+      url: getShareURL()
+    });
+    setShareStatus('Shared successfully.');
+  } catch (error) {
+    if (error && error.name === 'AbortError') return;
+    setShareStatus('Sharing could not be completed on this device.');
+  }
+}
+
+function openShareModal() {
+  setupShareEmailLink();
+  toggleNativeShareButton();
+  resetShareModalUI();
+  renderQRCode(getShareURL());
+  openModal(refs.shareModal);
 }
 
 function getSignupPayload(formEl) {
@@ -387,6 +494,9 @@ refs.openInfo.addEventListener('click', async () => {
   openModal(refs.infoModal);
   await loadWardPlan();
 });
+refs.openShare.addEventListener('click', openShareModal);
+refs.copyLink.addEventListener('click', onCopyLink);
+refs.shareNative.addEventListener('click', onNativeShare);
 
 document.addEventListener('click', (event) => {
   const closeTarget = event.target.closest('[data-close-modal]');
