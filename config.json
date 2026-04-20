@@ -1,9 +1,9 @@
 {
   "site_title": "Ward Emergency Response Map",
-  "map_asset": "assets/maps/current-map.svg",
+  "map_asset": "assets/maps/index.html",
   "ward_plan": {
-    "source_type": "local_html",
-    "url": "content/ward-plan.html"
+    "source_type": "google_doc_html",
+    "url": "https://docs.google.com/document/d/e/2PACX-1vT6JTT0e5QXujI15n7a1ACca6KFAloCeXev0oFuZOR76odZ3jdlTNOLFwHu1-Ll1is7keKIR7H9EcsB/pub"
   },
   "signup_form": {
     "source_type": "apps_script_endpoint",
