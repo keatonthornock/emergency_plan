@@ -3,7 +3,7 @@
   "map_asset": "assets/maps/current-map.svg",
   "ward_plan": {
     "source_type": "google_doc_html",
-    "url": "GOOGLE SHEET TEMPLATE URL"
+    "url": "https://docs.google.com/document/d/1kMKDy8adxn-2e-rC1cPaPn7ac1iiKhvwVdhCIgdv6OY/edit?tab=t.0#heading=h.j3zs0ghd0rxj"
   },
   "signup_form": {
     "source_type": "apps_script_endpoint",
