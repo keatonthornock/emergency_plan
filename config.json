@@ -3,20 +3,20 @@
   "map_asset": "assets/maps/index.html",
   "ward_plan": {
     "source_type": "google_doc_html",
-    "url": "https://docs.google.com/document/d/e/2PACX-1vT6JTT0e5QXujI15n7a1ACca6KFAloCeXev0oFuZOR76odZ3jdlTNOLFwHu1-Ll1is7keKIR7H9EcsB/pub"
+    "url": "GOOGLE SHEET TEMPLATE URL"
   },
   "signup_form": {
     "source_type": "apps_script_endpoint",
-    "endpoint_url": "https://script.google.com/macros/s/AKfycbzTbaZS-bu7qzOzziBZheBdigO7scQhdpYW-URe6dR1SMg0wiOQg7GNHPvqjzdqw-nV/exec",
+    "endpoint_url": "GOOGLE SCRIPT APP URL",
     "sheet_tab_name": "House List"
   },
   "contacts": {
-    "emergency_center": "(801) 786-7911",
-    "harrisville_police": "(801) 782-4100",
-    "pleasant_view_police": "(801) 782-6736",
-    "weber_county_fire": "(801) 782-3580",
-    "mckay_dee_hospital": "(801) 387-2800",
-    "ogden_regional": "(801) 479-2111",
-    "weber_county_emergency_management": "(801) 778-6680"
+    "emergency_center": "(xxx) xxx-xxxx",
+    "city_police": "(xxx) xxx-xxxx",
+    "city2_police": "(xxx) xxx-xxxx",
+    "county_fire": "(xxx) xxx-xxxx",
+    "named_hospital": "(xxx) xxx-xxxx",
+    "named_medical_center": "(xxx) xxx-xxxx",
+    "county_emergency_management": "(xxx) xxx-xxxx"
   }
 }
