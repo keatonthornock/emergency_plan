@@ -26,6 +26,12 @@ This template is designed for **non-technical maintenance**:
     Code.gs                 # Apps Script backend example
 ```
 
+## Template links
+`Google Sheet (for back end tracking and dashboard):` https://docs.google.com/spreadsheets/d/1cY0mtiEOjRbhq3CkYpQ9DcMD0t_P3jdbwv-7_E0vFEI/edit?gid=0#gid=0
+`Google Doc (for plan):` https://docs.google.com/document/d/1kMKDy8adxn-2e-rC1cPaPn7ac1iiKhvwVdhCIgdv6OY/edit?tab=t.0#heading=h.j3zs0ghd0rxj
+
+---
+
 ## Quick setup
 
 1. Copy `config.json.example` to `config.json` (or edit existing `config.json`).
